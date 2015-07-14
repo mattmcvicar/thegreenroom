@@ -1,6 +1,4 @@
 # Imports --------------------------------------
-print ''
-print '  importing...'
 from instagram.client import InstagramAPI
 import urllib2, urllib
 import matplotlib.pylab as plt
@@ -8,6 +6,7 @@ from PIL import Image
 import cStringIO
 import numpy as np
 import matplotlib.gridspec as gridspec
+import sys
 
 # Parameters -----------------------------------
 CLIENT_ID =	"58e08193e2f147b7a3f509964870894c"
@@ -54,13 +53,32 @@ def display_photos(media_ids, n):
     plt.subplots_adjust(wspace=0.01, hspace=0.01)
     plt.show()
 
+def die_with_usage():
 
+    print """
+    TheGreenRoom.py
+    ---------------
+
+    usage:
+    $ python TheGreenRoom.py tag n
+
+    inputs:
+      tag - tag to search instagram for
+      n - number of photos to display in grid
+    """
+    exit()
 # Main ------------------------------------------
-api = InstagramAPI(access_token=ACCESS_TOKEN, client_secret=CLIENT_SECRET)
+if __name__ == "__main__":
 
-print "  getting pictures tagged with #" + TAG + "..."
-photos = get_photos(TAG, N)
-images = read_photos(photos)
-display_photos(images, N)
-print ''
+    if len(sys.argv) != 3:
+    	die_with_usage()
+
+    api = InstagramAPI(access_token=ACCESS_TOKEN, client_secret=CLIENT_SECRET)
+    print "  getting pictures tagged with #" + TAG + "..."
+    
+    TAG, N = sys.argv[1:]
+    photos = get_photos(TAG, N)
+    images = read_photos(photos)
+    display_photos(images, N)
+    print ''
 
